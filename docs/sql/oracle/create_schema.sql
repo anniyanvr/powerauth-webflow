@@ -18,58 +18,72 @@ CREATE SEQUENCE ns_credential_definition_seq MINVALUE 1 MAXVALUE 999999999999999
 CREATE SEQUENCE ns_otp_definition_seq MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER NOCYCLE;
 CREATE SEQUENCE ns_credential_history_seq MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER NOCYCLE;
 
--- Table oauth_client_details stores details about OAuth2 client applications.
--- Every Web Flow client application should have a record in this table.
--- See: https://github.com/spring-projects/spring-security-oauth/blob/master/spring-security-oauth2/src/main/java/org/springframework/security/oauth2/provider/client/JdbcClientDetailsService.java
-CREATE TABLE oauth_client_details (
-  client_id               VARCHAR2(256 CHAR) PRIMARY KEY,     -- OAuth 2.0 protocol client ID.
-  resource_ids            VARCHAR2(256 CHAR),                 -- Identifiers of the OAuth 2.0 resource servers.
-  client_secret           VARCHAR2(256 CHAR),                 -- OAuth 2.0 protocol client secret.
-  scope                   VARCHAR2(256 CHAR),                 -- OAuth 2.0 scopes, comma-separated values.
-  authorized_grant_types  VARCHAR2(256 CHAR),                 -- OAuth 2.0 authorization grant types, comma-separated values.
-  web_server_redirect_uri VARCHAR2(256 CHAR),                 -- OAuth 2.0 redirect URIs, comma-separated values.
-  authorities             VARCHAR2(256 CHAR),                 -- OAuth 2.0 resource grant authorities.
-  access_token_validity   INTEGER,                            -- Validity of the OAuth 2.0 access tokens, in seconds.
-  refresh_token_validity  INTEGER,                            -- Validity of the OAuth 2.0 refresh tokens, in seconds.
-  additional_information  VARCHAR2(4000 CHAR),                -- Field reserved for additional information about the client.
-  autoapprove             VARCHAR2(256 CHAR)                  -- Flag indicating if scopes should be automatically approved.
+-- Table oauth2_authorization stores information about OAuth 2.1 authorizations
+-- Source: https://github.com/spring-projects/spring-authorization-server/blob/main/oauth2-authorization-server/src/main/resources/org/springframework/security/oauth2/server/authorization/oauth2-authorization-schema.sql
+CREATE TABLE oauth2_authorization (
+    id VARCHAR(100) NOT NULL,
+    registered_client_id VARCHAR(100) NOT NULL,
+    principal_name VARCHAR(200) NOT NULL,
+    authorization_grant_type VARCHAR(100) NOT NULL,
+    authorized_scopes VARCHAR(1000) DEFAULT NULL,
+    attributes CLOB DEFAULT NULL,
+    state VARCHAR(500) DEFAULT NULL,
+    authorization_code_value CLOB DEFAULT NULL,
+    authorization_code_issued_at TIMESTAMP DEFAULT NULL,
+    authorization_code_expires_at TIMESTAMP DEFAULT NULL,
+    authorization_code_metadata CLOB DEFAULT NULL,
+    access_token_value CLOB DEFAULT NULL,
+    access_token_issued_at TIMESTAMP DEFAULT NULL,
+    access_token_expires_at TIMESTAMP DEFAULT NULL,
+    access_token_metadata CLOB DEFAULT NULL,
+    access_token_type VARCHAR(100) DEFAULT NULL,
+    access_token_scopes VARCHAR(1000) DEFAULT NULL,
+    oidc_id_token_value CLOB DEFAULT NULL,
+    oidc_id_token_issued_at TIMESTAMP DEFAULT NULL,
+    oidc_id_token_expires_at TIMESTAMP DEFAULT NULL,
+    oidc_id_token_metadata CLOB DEFAULT NULL,
+    refresh_token_value CLOB DEFAULT NULL,
+    refresh_token_issued_at TIMESTAMP DEFAULT NULL,
+    refresh_token_expires_at TIMESTAMP DEFAULT NULL,
+    refresh_token_metadata CLOB DEFAULT NULL,
+    user_code_value CLOB DEFAULT NULL,
+    user_code_issued_at TIMESTAMP DEFAULT NULL,
+    user_code_expires_at TIMESTAMP DEFAULT NULL,
+    user_code_metadata CLOB DEFAULT NULL,
+    device_code_value CLOB DEFAULT NULL,
+    device_code_issued_at TIMESTAMP DEFAULT NULL,
+    device_code_expires_at TIMESTAMP DEFAULT NULL,
+    device_code_metadata CLOB DEFAULT NULL,
+    PRIMARY KEY (id)
 );
 
--- Table oauth_client_token stores OAuth2 tokens for retrieval by client applications.
--- See: https://docs.spring.io/spring-security/oauth/apidocs/org/springframework/security/oauth2/client/token/JdbcClientTokenServices.html
-CREATE TABLE oauth_client_token (
-  authentication_id VARCHAR2(256 CHAR) PRIMARY KEY,           -- Authentication ID related to client token.
-  token_id          VARCHAR2(256 CHAR),                       -- Token ID.
-  token             BLOB,                                     -- Token value.
-  user_name         VARCHAR2(256 CHAR),                       -- Username, identification of the user.
-  client_id         VARCHAR2(256 CHAR)                        -- OAuth 2.0 Client ID.
+-- Table oauth2_registered_client stores information about OAuth 2.1 clients
+-- Source: https://github.com/spring-projects/spring-authorization-server/blob/main/oauth2-authorization-server/src/main/resources/org/springframework/security/oauth2/server/authorization/client/oauth2-registered-client-schema.sql
+CREATE TABLE oauth2_registered_client (
+    id VARCHAR(100) NOT NULL,
+    client_id VARCHAR(100) NOT NULL,
+    client_id_issued_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    client_secret VARCHAR(200) DEFAULT NULL,
+    client_secret_expires_at TIMESTAMP DEFAULT NULL,
+    client_name VARCHAR(200) NOT NULL,
+    client_authentication_methods VARCHAR(1000) NOT NULL,
+    authorization_grant_types VARCHAR(1000) NOT NULL,
+    redirect_uris VARCHAR(1000) DEFAULT NULL,
+    post_logout_redirect_uris VARCHAR(1000) DEFAULT NULL,
+    scopes VARCHAR(1000) NOT NULL,
+    client_settings VARCHAR(2000) NOT NULL,
+    token_settings VARCHAR(2000) NOT NULL,
+    PRIMARY KEY (id),
+    CONSTRAINT client_id_unique UNIQUE (client_id)
 );
 
--- Table oauth_access_token stores OAuth2 access tokens.
--- See: https://github.com/spring-projects/spring-security-oauth/blob/master/spring-security-oauth2/src/main/java/org/springframework/security/oauth2/provider/token/store/JdbcTokenStore.java
-CREATE TABLE oauth_access_token (
-  authentication_id VARCHAR2(256 CHAR) PRIMARY KEY,           -- Authentication ID related to access token.
-  token_id          VARCHAR2(256 CHAR),                       -- Token ID.
-  token             BLOB,                                     -- Token value.
-  user_name         VARCHAR2(256 CHAR),                       -- Username, identification of the user.
-  client_id         VARCHAR2(256 CHAR),                       -- OAuth 2.0 Client ID.
-  authentication    BLOB,                                     -- Encoded authentication details.
-  refresh_token     VARCHAR2(256 CHAR)                        -- Refresh token ID.
-);
-
--- Table oauth_access_token stores OAuth2 refresh tokens.
--- See: https://github.com/spring-projects/spring-security-oauth/blob/master/spring-security-oauth2/src/main/java/org/springframework/security/oauth2/provider/token/store/JdbcTokenStore.java
-CREATE TABLE oauth_refresh_token (
-  token_id       VARCHAR2(256 CHAR),                          -- Refresh token ID.
-  token          BLOB,                                        -- Token value.
-  authentication BLOB                                         -- Encoded authentication details.
-);
-
--- Table oauth_code stores data for the OAuth2 authorization code grant.
--- See: https://github.com/spring-projects/spring-security-oauth/blob/master/spring-security-oauth2/src/main/java/org/springframework/security/oauth2/provider/code/JdbcAuthorizationCodeServices.java
-CREATE TABLE oauth_code (
-  code           VARCHAR2(256 CHAR),                          -- OAuth 2.0 protocol "codes".
-  authentication BLOB                                         -- Encoded authentication details.
+-- Table oauth2_registered_client stores information about OAuth 2.1 consents
+-- Source: https://github.com/spring-projects/spring-authorization-server/blob/main/oauth2-authorization-server/src/main/resources/org/springframework/security/oauth2/server/authorization/oauth2-authorization-consent-schema.sql
+CREATE TABLE oauth2_authorization_consent (
+    registered_client_id VARCHAR(100) NOT NULL,
+    principal_name VARCHAR(200) NOT NULL,
+    authorities VARCHAR(1000) NOT NULL,
+    PRIMARY KEY (registered_client_id, principal_name)
 );
 
 -- Table wf_operation_session maps operations to HTTP sessions.
@@ -348,6 +362,7 @@ CREATE TABLE ns_credential_storage (
   credential_definition_id         NUMBER(19,0) NOT NULL,                   -- Credential definition identifier.
   user_id                          VARCHAR2(256 CHAR) NOT NULL,             -- User identity identifier.
   type                             VARCHAR2(32 CHAR) NOT NULL,              -- Credential type: PERMANENT, TEMPORARY.
+  external_reference               VARCHAR2(256 CHAR),                      -- Optional reference to external credentials
   user_name                        VARCHAR2(256 CHAR),                      -- Username.
   value                            VARCHAR2(256 CHAR) NOT NULL,             -- Credential value.
   status                           VARCHAR2(32 CHAR) NOT NULL,              -- Credential status: ACTIVE, BLOCKED_TEMPORARY, BLOCKED_PERMANENT, REMOVED.
@@ -398,8 +413,7 @@ CREATE TABLE ns_otp_storage (
   timestamp_verified          TIMESTAMP,                                    -- Timestamp when one time password was verified.
   timestamp_blocked           TIMESTAMP,                                    -- Timestamp when one time password was blocked.
   timestamp_expires           TIMESTAMP,                                    -- Timestamp when one time password expires.
-  CONSTRAINT ns_otp_definition_fk FOREIGN KEY (otp_definition_id) REFERENCES ns_otp_definition (otp_definition_id),
-  CONSTRAINT ns_otp_user_fk FOREIGN KEY (user_id) REFERENCES ns_user_identity (user_id)
+  CONSTRAINT ns_otp_definition_fk FOREIGN KEY (otp_definition_id) REFERENCES ns_otp_definition (otp_definition_id)
 );
 
 -- Table ns_operation stores details of Web Flow operations.
@@ -409,10 +423,10 @@ CREATE TABLE ns_operation (
   operation_name                VARCHAR2(32 CHAR) NOT NULL,               -- Name of the operation, represents a type of the operation, for example, "login" or "authorize_payment".
   operation_data                CLOB NOT NULL,                            -- Signing data of the operation.
   operation_form_data           CLOB,                                     -- Structured data of the operation that are displayed to the end user.
-  application_id                VARCHAR2(256 CHAR),                       -- ID of the application that initiated the operation, usually OAuth 2.0 client ID.
+  application_id                VARCHAR2(256 CHAR),                       -- ID of the application that initiated the operation, usually OAuth 2.1 client ID.
   application_name              VARCHAR2(256 CHAR),                       -- Displayable name of the application that initiated the operation.
   application_description       VARCHAR2(256 CHAR),                       -- Displayable description of the application that initiated the operation.
-  application_original_scopes   VARCHAR2(256 CHAR),                       -- Original OAuth 2.0 scopes used by the application that initiated the operation.
+  application_original_scopes   VARCHAR2(256 CHAR),                       -- Original OAuth 2.1 scopes used by the application that initiated the operation.
   application_extras            CLOB,                                     -- Any additional information related to the application that initiated the operation.
   user_id                       VARCHAR2(256 CHAR),                       -- Associated user ID.
   organization_id               VARCHAR2(256 CHAR),                       -- Associated organization ID.
@@ -438,7 +452,6 @@ CREATE TABLE ns_authentication (
   result_credential           VARCHAR2(32 CHAR),                            -- Authentication result for credential authentication.
   result_otp                  VARCHAR2(32 CHAR),                            -- Authentication result for one time password authentication.
   timestamp_created           TIMESTAMP,                                    -- Timestamp when authentication record was created.
-  CONSTRAINT ns_auth_user_fk FOREIGN KEY (user_id) REFERENCES ns_user_identity (user_id),
   CONSTRAINT ns_auth_credential_fk FOREIGN KEY (credential_id) REFERENCES ns_credential_storage (credential_id),
   CONSTRAINT ns_auth_otp_fk FOREIGN KEY (otp_id) REFERENCES ns_otp_storage (otp_id),
   CONSTRAINT ns_auth_operation_fk FOREIGN KEY (operation_id) REFERENCES ns_operation (operation_id)
@@ -539,7 +552,7 @@ CREATE TABLE tpp_consent (
 CREATE TABLE tpp_user_consent (
     id                  INTEGER PRIMARY KEY NOT NULL,                     -- User given consent ID.
     user_id             VARCHAR2(256 CHAR) NOT NULL,                      -- User ID.
-    client_id           VARCHAR2(256 CHAR) NOT NULL,                      -- OAuth 2.0 client ID.
+    client_id           VARCHAR2(256 CHAR) NOT NULL,                      -- OAuth 2.1 client ID.
     consent_id          VARCHAR2(64 CHAR) NOT NULL,                       -- Consent ID.
     external_id         VARCHAR2(256 CHAR),                               -- External ID associated with the consent approval, usually the operation ID.
     consent_parameters  CLOB NOT NULL,                                    -- Specific parameters that were filled in into the user consent template.
@@ -574,13 +587,13 @@ CREATE TABLE tpp_detail (
 
 CREATE TABLE tpp_app_detail (
   tpp_id                INTEGER NOT NULL,                                 -- TPP ID.
-  app_client_id         VARCHAR2(256 CHAR) NOT NULL,                      -- TPP app ID, represented as OAuth 2.0 client ID and connecting the application to OAuth 2.0 credentials.
+  app_client_id         VARCHAR2(256 CHAR) NOT NULL,                      -- TPP app ID, represented as OAuth 2.1 client ID and connecting the application to OAuth 2.1 credentials.
   app_name              VARCHAR2(256 CHAR) NOT NULL,                      -- TPP app name.
   app_info              CLOB NULL,                                        -- An arbitrary additional info about TPP app, if available.
   app_type              VARCHAR2(32 CHAR) NULL,                           -- Application type, "web" or "native".
   CONSTRAINT tpp_detail_pk PRIMARY KEY (tpp_id, app_client_id),
   CONSTRAINT tpp_detail_fk FOREIGN KEY (tpp_id) REFERENCES tpp_detail (tpp_id),
-  CONSTRAINT tpp_client_secret_fk FOREIGN KEY (app_client_id) REFERENCES oauth_client_details (client_id)
+  CONSTRAINT tpp_client_secret_fk FOREIGN KEY (app_client_id) REFERENCES oauth2_registered_client (client_id)
 );
 
 -- Table audit_log stores auditing information
@@ -616,7 +629,6 @@ CREATE INDEX wf_operation_hash ON wf_operation_session (operation_hash);
 CREATE INDEX wf_websocket_session ON wf_operation_session (websocket_session_id);
 CREATE INDEX ns_operation_pending ON ns_operation (user_id, result);
 CREATE UNIQUE INDEX ns_operation_afs_unique on ns_operation_afs (operation_id, request_afs_action, request_step_index);
-CREATE INDEX wf_certificate_operation ON wf_certificate_verification (operation_id);
 CREATE UNIQUE INDEX ns_application_name ON ns_application (name);
 CREATE UNIQUE INDEX ns_credential_policy_name ON ns_credential_policy (name);
 CREATE UNIQUE INDEX ns_otp_policy_name ON ns_otp_policy (name);
@@ -686,3 +698,22 @@ EXCEPTION WHEN OTHERS THEN IF SQLCODE != -955 THEN RAISE; END IF; END;
 -- ALTER TABLE ns_user_prefs ADD CONSTRAINT ns_user_prefs_fk FOREIGN KEY (user_id) REFERENCES ns_user_identity (user_id);
 -- ALTER TABLE ns_otp_storage ADD CONSTRAINT ns_otp_user_fk FOREIGN KEY (user_id) REFERENCES ns_user_identity (user_id);
 -- ALTER TABLE ns_authentication ADD CONSTRAINT ns_auth_user_fk FOREIGN KEY (user_id) REFERENCES ns_user_identity (user_id);
+
+-- Create a new table shedlock
+CREATE TABLE shedlock (name VARCHAR2(64) NOT NULL, lock_until TIMESTAMP NOT NULL, locked_at TIMESTAMP NOT NULL, locked_by VARCHAR2(255) NOT NULL, CONSTRAINT PK_SHEDLOCK PRIMARY KEY (name));
+
+-- Changeset powerauth-nextstep/1.10.x/20250715-add-location-setting::1::Zdenek Cerny
+-- Add column source to ns_credential_storage
+ALTER TABLE ns_credential_storage ADD source VARCHAR2(32) DEFAULT 'LOCAL';
+
+-- Changeset powerauth-nextstep/1.10.x/20250715-add-location-setting::2::Zdenek Cerny
+-- Add column target to ns_credential_storage
+ALTER TABLE ns_credential_storage ADD target VARCHAR2(32) DEFAULT 'LOCAL';
+
+-- Changeset powerauth-webflow/2.1.x/20260407-add-subject-id-to-audit-log.xml::1::Pavel Sindelar
+-- Add column subject_id to audit_log
+ALTER TABLE audit_log ADD subject_id VARCHAR2(256);
+
+-- Changeset powerauth-webflow/2.1.x/20260407-add-subject-id-to-audit-log.xml::2::Pavel Sindelar
+-- Create index on audit_log(subject_id)
+CREATE INDEX audit_log_subject_id_idx ON audit_log(subject_id);

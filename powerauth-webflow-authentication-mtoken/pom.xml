@@ -24,78 +24,59 @@
 
     <parent>
         <artifactId>powerauth-webflow-parent</artifactId>
-        <groupId>io.getlime.security</groupId>
-        <version>1.4.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
+        <groupId>com.wultra.security</groupId>
+        <version>2.1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>powerauth-webflow-authentication-mtoken</artifactId>
     <name>powerauth-webflow-authentication-mtoken</name>
-    <groupId>io.getlime.security</groupId>
-    <version>1.4.0-SNAPSHOT</version>
+    <description>PowerAuth WebFlow Authentication with Mobile Token</description>
+
+    <properties>
+        <skipPublishing>true</skipPublishing>
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
 
     <dependencies>
 
         <!-- Spring Dependencies -->
         <dependency>
-            <groupId>org.springframework.ws</groupId>
-            <artifactId>spring-ws-security</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>bcprov-jdk15on</artifactId>
-                    <groupId>org.bouncycastle</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-messaging</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- PowerAuth Dependencies -->
         <dependency>
-            <groupId>io.getlime.security</groupId>
+            <groupId>com.wultra.security</groupId>
             <artifactId>powerauth-webflow-authentication</artifactId>
-            <version>1.4.0-SNAPSHOT</version>
-            <exclusions>
-                <!-- TODO (racansky, 2022-11-30) temporal until lib build -->
-                <exclusion>
-                    <groupId>org.apache.tomcat.embed</groupId>
-                    <artifactId>tomcat-embed-core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.tomcat.embed</groupId>
-                    <artifactId>tomcat-embed-el</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.tomcat.embed</groupId>
-                    <artifactId>tomcat-embed-websocket</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.getlime.security</groupId>
+            <groupId>com.wultra.security</groupId>
             <artifactId>powerauth-restful-security-spring</artifactId>
-            <version>${powerauth.version}</version>
+            <version>${powerauth-rest.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.getlime.security</groupId>
+            <groupId>com.wultra.security</groupId>
             <artifactId>powerauth-push-client</artifactId>
-            <version>${powerauth.version}</version>
+            <version>${powerauth-push.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.getlime.security</groupId>
+            <groupId>com.wultra.security</groupId>
             <artifactId>powerauth-mtoken-model</artifactId>
-            <version>1.4.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>io.getlime.core</groupId>
+            <groupId>com.wultra.core</groupId>
             <artifactId>audit-base</artifactId>
-            <version>${wultra-java-core.version}</version>
         </dependency>
 
         <!-- Other Dependencies -->
@@ -111,17 +92,5 @@
         </dependency>
 
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>

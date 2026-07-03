@@ -783,26 +783,12 @@ For other authentication methods use the following configuration:
 ```
 <!-- end -->
 
-<!-- begin api DELETE /user/auth-method -->
+<!-- begin api POST /user/auth-method/delete -->
 ### Disable an Authentication Method for Given User
 
 Disable an authentication method for given user and lists all authentication methods enabled for given user after the authentication method has been disabled.
 
-This method has a `POST /user/auth-method/delete` alternative.
-
 <!-- begin remove -->
-<table>
-    <tr>
-        <td>Method</td>
-        <td><code>DELETE</code></td>
-    </tr>
-    <tr>
-        <td>Resource URI</td>
-        <td><code>/user/auth-method</code></td>
-    </tr>
-</table>
-
-Alternative with `POST` method for environments which do not allow `DELETE` methods:
 <table>
     <tr>
         <td>Method</td>
@@ -919,26 +905,12 @@ The list of expected status codes:
 ```
 <!-- end -->
 
-<!-- begin api DELETE /auth-method -->
+<!-- begin api POST /auth-method/delete -->
 ### Delete an Authentication Method
 
 Delete an authentication method. Use only when the authentication method which is to be deleted has no usages.
 
-This method has a `POST /auth-method/delete` alternative.
-
 <!-- begin remove -->
-<table>
-    <tr>
-        <td>Method</td>
-        <td><code>DELETE</code></td>
-    </tr>
-    <tr>
-        <td>Resource URI</td>
-        <td><code>/auth-method</code></td>
-    </tr>
-</table>
-
-Alternative with `POST` method for environments which do not allow `DELETE` methods:
 <table>
     <tr>
         <td>Method</td>
@@ -3113,26 +3085,12 @@ The list of expected status codes:
 ```
 <!-- end -->
 
-<!-- begin api DELETE /operation/config -->
+<!-- begin api POST /operation/config/delete -->
 ### Delete an Operation Configuration
 
 Delete an operation configuration.
 
-This method has a `POST /operation/config/delete` alternative.
-
 <!-- begin remove -->
-<table>
-    <tr>
-        <td>Method</td>
-        <td><code>DELETE</code></td>
-    </tr>
-    <tr>
-        <td>Resource URI</td>
-        <td><code>/operation/config</code></td>
-    </tr>
-</table>
-
-Alternative with `POST` method for environments which do not allow `DELETE` methods:
 <table>
     <tr>
         <td>Method</td>
@@ -3317,22 +3275,20 @@ The list of expected status codes:
 ```
 <!-- end -->
 
-<!-- begin api DELETE /operation/auth-method/config -->
+<!-- begin api POST /operation/auth-method/config/delete -->
 ### Delete an Operation and Authentication Method Configuration
 
 Delete a configuration for an operation and an authentication method.
-
-This method has a `POST /operation/auth-method/config/delete` alternative.
 
 <!-- begin remove -->
 <table>
     <tr>
         <td>Method</td>
-        <td><code>DELETE</code></td>
+        <td><code>POST</code></td>
     </tr>
     <tr>
         <td>Resource URI</td>
-        <td><code>/operation/auth-method/config</code></td>
+        <td><code>/operation/auth-method/config/delete</code></td>
     </tr>
 </table>
 <!-- end -->
@@ -3601,26 +3557,12 @@ The list of expected status codes:
 
 <!-- end -->
 
-<!-- begin api DELETE /organization -->
+<!-- begin api POST /organization/delete -->
 ### Delete an Organization
 
 Delete an organization.
 
-This method has a `POST /organization/delete` alternative.
-
 <!-- begin remove -->
-<table>
-    <tr>
-        <td>Method</td>
-        <td><code>DELETE</code></td>
-    </tr>
-    <tr>
-        <td>Resource URI</td>
-        <td><code>/organization</code></td>
-    </tr>
-</table>
-
-Alternative with `POST` method for environments which do not allow `DELETE` methods:
 <table>
     <tr>
         <td>Method</td>
@@ -3743,26 +3685,12 @@ The list of expected status codes:
 ```
 <!-- end -->
 
-<!-- begin api DELETE /step/definition -->
+<!-- begin api POST /step/definition/delete -->
 ### Delete a Step Definition
 
 Delete a step definition.
 
-This method has a `POST /step/definition/delete` alternative.
-
 <!-- begin remove -->
-<table>
-    <tr>
-        <td>Method</td>
-        <td><code>DELETE</code></td>
-    </tr>
-    <tr>
-        <td>Resource URI</td>
-        <td><code>/step/definition</code></td>
-    </tr>
-</table>
-
-Alternative with `POST` method for environments which do not allow `DELETE` methods:
 <table>
     <tr>
         <td>Method</td>
@@ -4023,26 +3951,12 @@ The list of expected status codes:
 
 <!-- end -->
 
-<!-- begin api DELETE /application -->
+<!-- begin api POST /application/delete -->
 ### Delete an Application
 
 Delete an application.
 
-This method has a `POST /application/delete` alternative.
-
 <!-- begin remove -->
-<table>
-    <tr>
-        <td>Method</td>
-        <td><code>DELETE</code></td>
-    </tr>
-    <tr>
-        <td>Resource URI</td>
-        <td><code>/application</code></td>
-    </tr>
-</table>
-
-Alternative with `POST` method for environments which do not allow `DELETE` methods:
 <table>
     <tr>
         <td>Method</td>
@@ -4227,26 +4141,12 @@ The list of expected status codes:
 ```
 <!-- end -->
 
-<!-- begin api DELETE /role -->
+<!-- begin api POST /role/delete -->
 ### Delete a Role
 
 Delete a user role.
 
-This method has a `POST /role/delete` alternative.
-
 <!-- begin remove -->
-<table>
-    <tr>
-        <td>Method</td>
-        <td><code>DELETE</code></td>
-    </tr>
-    <tr>
-        <td>Resource URI</td>
-        <td><code>/role</code></td>
-    </tr>
-</table>
-
-Alternative with `POST` method for environments which do not allow `DELETE` methods:
 <table>
     <tr>
         <td>Method</td>
@@ -4760,26 +4660,12 @@ The list of expected status codes:
 
 <!-- end -->
 
-<!-- begin api DELETE /credential/policy -->
+<!-- begin api POST /credential/policy/delete -->
 ### Delete a credential policy
 
 Delete a credential policy.
 
-This method has a `POST /credential/policy/delete` alternative.
-
 <!-- begin remove -->
-<table>
-    <tr>
-        <td>Method</td>
-        <td><code>DELETE</code></td>
-    </tr>
-    <tr>
-        <td>Resource URI</td>
-        <td><code>/credential/policy</code></td>
-    </tr>
-</table>
-
-Alternative with `POST` method for environments which do not allow `DELETE` methods:
 <table>
     <tr>
         <td>Method</td>
@@ -5108,26 +4994,12 @@ The list of expected status codes:
 
 <!-- end -->
 
-<!-- begin api DELETE /credential/definition -->
+<!-- begin api POST /credential/definition/delete -->
 ### Delete a credential definition
 
 Delete a credential definition.
 
-This method has a `POST /credential/definition/delete` alternative.
-
 <!-- begin remove -->
-<table>
-    <tr>
-        <td>Method</td>
-        <td><code>DELETE</code></td>
-    </tr>
-    <tr>
-        <td>Resource URI</td>
-        <td><code>/credential/definition</code></td>
-    </tr>
-</table>
-
-Alternative with `POST` method for environments which do not allow `DELETE` methods:
 <table>
     <tr>
         <td>Method</td>
@@ -5424,26 +5296,12 @@ The list of expected status codes:
 
 <!-- end -->
 
-<!-- begin api DELETE /otp/policy -->
+<!-- begin api POST /otp/policy/delete -->
 ### Delete an OTP policy
 
 Delete an OTP policy.
 
-This method has a `POST /otp/policy/delete` alternative.
-
 <!-- begin remove -->
-<table>
-    <tr>
-        <td>Method</td>
-        <td><code>DELETE</code></td>
-    </tr>
-    <tr>
-        <td>Resource URI</td>
-        <td><code>/otp/policy</code></td>
-    </tr>
-</table>
-
-Alternative with `POST` method for environments which do not allow `DELETE` methods:
 <table>
     <tr>
         <td>Method</td>
@@ -5735,26 +5593,12 @@ The list of expected status codes:
 
 <!-- end -->
 
-<!-- begin api DELETE /otp/definition -->
+<!-- begin api POST /otp/definition/delete -->
 ### Delete an OTP definition
 
 Delete an OTP definition.
 
-This method has a `POST /otp/definition/delete` alternative.
-
 <!-- begin remove -->
-<table>
-    <tr>
-        <td>Method</td>
-        <td><code>DELETE</code></td>
-    </tr>
-    <tr>
-        <td>Resource URI</td>
-        <td><code>/otp/definition</code></td>
-    </tr>
-</table>
-
-Alternative with `POST` method for environments which do not allow `DELETE` methods:
 <table>
     <tr>
         <td>Method</td>
@@ -5856,6 +5700,8 @@ The list of expected status codes:
   }
 }
 ```
+
+Possible algorithm names: `ARGON_2D`, `ARGON_2I`, `ARGON_2ID`, `BCRYPT`. For `BCRYPT` empty parameters should be used as this algorithm does not support hashing algorithm parameterization.
 
 #### Response 200
 
@@ -6053,26 +5899,12 @@ The list of expected status codes:
 
 <!-- end -->
 
-<!-- begin api DELETE /hashconfig -->
+<!-- begin api POST /hashconfig/delete -->
 ### Delete a Hashing Configuration
 
 Delete a hashing configuration.
 
-This method has a `POST /hashconfig/delete` alternative.
-
 <!-- begin remove -->
-<table>
-    <tr>
-        <td>Method</td>
-        <td><code>DELETE</code></td>
-    </tr>
-    <tr>
-        <td>Resource URI</td>
-        <td><code>/hashconfig</code></td>
-    </tr>
-</table>
-
-Alternative with `POST` method for environments which do not allow `DELETE` methods:
 <table>
     <tr>
         <td>Method</td>
@@ -6183,6 +6015,8 @@ The list of expected status codes:
       {
         "credentialName": "RETAIL_CREDENTIAL",
         "credentialType": "PERMANENT",
+        "credentialSource": "LOCAL",
+        "credentialTarget": "LOCAL",
         "username": "testuser"
       }
     ]
@@ -6219,6 +6053,8 @@ The list of expected status codes:
       {
         "credentialName": "RETAIL_CREDENTIAL",
         "credentialType": "PERMANENT",
+        "credentialSource": "LOCAL",
+        "credentialTarget": "LOCAL",
         "credentialStatus": "ACTIVE",
         "username": "testuser",
         "credentialValue": "buCH<JpTw1mA",
@@ -6323,6 +6159,8 @@ The list of expected status codes:
       {
         "credentialName": "RETAIL_CREDENTIAL",
         "credentialType": "PERMANENT",
+        "credentialSource": "LOCAL",
+        "credentialTarget": "LOCAL",
         "credentialStatus": "ACTIVE",
         "username": "testuser2",
         "credentialChangeRequired": false,
@@ -6415,6 +6253,8 @@ The list of expected status codes:
       {
         "credentialName": "RETAIL_CREDENTIAL",
         "credentialType": "PERMANENT",
+        "credentialSource": "LOCAL",
+        "credentialTarget": "LOCAL",
         "username": "test1234",
         "credentialValue": "S3cret.1234"
       }
@@ -6454,6 +6294,8 @@ The list of expected status codes:
       {
         "credentialName": "RETAIL_CREDENTIAL",
         "credentialType": "PERMANENT",
+        "credentialSource": "LOCAL",
+        "credentialTarget": "LOCAL",
         "credentialStatus": "ACTIVE",
         "username": "test1234",
         "credentialValue": null,
@@ -6629,6 +6471,8 @@ The list of expected status codes:
         {
           "credentialName": "RETAIL_CREDENTIAL",
           "credentialType": "PERMANENT",
+          "credentialSource": "LOCAL",
+          "credentialTarget": "LOCAL",
           "credentialStatus": "ACTIVE",
           "username": "77002401",
           "credentialChangeRequired": false,
@@ -6730,6 +6574,8 @@ The list of expected status codes:
           {
             "credentialName": "RETAIL_CREDENTIAL",
             "credentialType": "PERMANENT",
+            "credentialSource": "LOCAL",
+            "credentialTarget": "LOCAL",
             "credentialStatus": "ACTIVE",
             "username": "14655327",
             "credentialChangeRequired": false,
@@ -6864,26 +6710,12 @@ The list of expected status codes:
 ```
 <!-- end -->
 
-<!-- begin api DELETE /user -->
+<!-- begin api POST /user/delete -->
 ### Delete a User Identity
 
 Delete a user identity.
 
-This method has a `POST /otp/policy/delete` alternative.
-
 <!-- begin remove -->
-<table>
-    <tr>
-        <td>Method</td>
-        <td><code>DELETE</code></td>
-    </tr>
-    <tr>
-        <td>Resource URI</td>
-        <td><code>/user</code></td>
-    </tr>
-</table>
-
-Alternative with `POST` method for environments which do not allow `DELETE` methods:
 <table>
     <tr>
         <td>Method</td>
@@ -7156,26 +6988,12 @@ The list of expected status codes:
 
 <!-- end -->
 
-<!-- begin api DELETE /user/contact -->
+<!-- begin api POST /user/contact/delete -->
 ### Delete a User Contact
 
 Delete a user contact.
 
-This method has a `POST /user/contact/delete` alternative.
-
 <!-- begin remove -->
-<table>
-    <tr>
-        <td>Method</td>
-        <td><code>DELETE</code></td>
-    </tr>
-    <tr>
-        <td>Resource URI</td>
-        <td><code>/user/contact</code></td>
-    </tr>
-</table>
-
-Alternative with `POST` method for environments which do not allow `DELETE` methods:
 <table>
     <tr>
         <td>Method</td>
@@ -7464,26 +7282,12 @@ The list of expected status codes:
 ```
 <!-- end -->
 
-<!-- begin api DELETE /user/alias -->
+<!-- begin api POST /user/alias/delete -->
 ### Delete a User Alias
 
 Delete a user alias.
 
-This method has a `POST /user/alias/delete` alternative.
-
 <!-- begin remove -->
-<table>
-    <tr>
-        <td>Method</td>
-        <td><code>DELETE</code></td>
-    </tr>
-    <tr>
-        <td>Resource URI</td>
-        <td><code>/user/alias</code></td>
-    </tr>
-</table>
-
-Alternative with `POST` method for environments which do not allow `DELETE` methods:
 <table>
     <tr>
         <td>Method</td>
@@ -7597,26 +7401,12 @@ The list of expected status codes:
 ```
 <!-- end -->
 
-<!-- begin api DELETE /user/role -->
+<!-- begin api POST /user/role/delete -->
 ### Remove a Role from User Identity
 
 Remove a user role from user identity.
 
-This method has a `POST /user/role/delete` alternative.
-
 <!-- begin remove -->
-<table>
-    <tr>
-        <td>Method</td>
-        <td><code>DELETE</code></td>
-    </tr>
-    <tr>
-        <td>Resource URI</td>
-        <td><code>/user/role</code></td>
-    </tr>
-</table>
-
-Alternative with `POST` method for environments which do not allow `DELETE` methods:
 <table>
     <tr>
         <td>Method</td>
@@ -7742,6 +7532,8 @@ The list of expected status codes:
       {
         "credentialName": "RETAIL_CREDENTIAL",
         "credentialType": "PERMANENT",
+        "credentialSource": "LOCAL",
+        "credentialTarget": "LOCAL",
         "credentialStatus": "ACTIVE",
         "username": "test1234",
         "credentialChangeRequired": false,
@@ -7905,6 +7697,8 @@ The list of expected status codes:
     "userId": "user1234",
     "credentialName": "RETAIL_CREDENTIAL",
     "credentialType": "PERMANENT",
+    "credentialSource": "LOCAL",
+    "credentialTarget": "LOCAL",
     "credentialStatus": "ACTIVE",
     "username": "username1234",
     "credentialValue": "JeM1vr%GyJFh",
@@ -7917,7 +7711,7 @@ The list of expected status codes:
 <!-- begin api PUT /credential -->
 ### Update a Credential
 
-Update a credential.
+Update a credential. Credentials with a credential source `PROXY` or `LDAP` and credential target `LOCAL` are updated and the source is changed to `LOCAL`. For credentials with a non-`LOCAL` target, the external credential value is not updated; attempts to update `credentialValue` are ignored (no-op, with a warning), while other non-secret fields can still be updated.
 
 This method has a `POST /credential/update` alternative.
 
@@ -7972,8 +7766,12 @@ The list of expected status codes:
     "userId": "user1234",
     "credentialName": "RETAIL_CREDENTIAL",
     "credentialType": "PERMANENT",
+    "credentialSource": "LOCAL",
+    "credentialTarget": "LOCAL",
     "username": "username1234",
-    "credentialStatus": "ACTIVE"
+    "credentialValue": "JeM1vr%GyJFh",
+    "credentialStatus": "ACTIVE",
+    "timestampExpires": "2021-07-02T13:07:55+0000"
   }
 }
 ```
@@ -7990,6 +7788,8 @@ The list of expected status codes:
     "userId": "user1234",
     "credentialName": "RETAIL_CREDENTIAL",
     "credentialType": "PERMANENT",
+    "credentialSource": "LOCAL",
+    "credentialTarget": "LOCAL",
     "credentialStatus": "ACTIVE",
     "username": "username1234",
     "credentialChangeRequired": false
@@ -8068,7 +7868,7 @@ The list of expected status codes:
 <!-- begin api POST /credential/reset -->
 ### Reset a Credential
 
-Reset a credential.
+Reset a credential - i.e. a new credential value is generated and updated in NextStep. For credentials with a credential source `PROXY` or `LDAP` and credential target `LOCAL` the source is changed to `LOCAL`. The credential value in the external system is *not reset*.
 
 <!-- begin remove -->
 <table>
@@ -8124,7 +7924,9 @@ The list of expected status codes:
     "credentialName": "RETAIL_CREDENTIAL",
     "username": "username1234",
     "credentialValue": "N4DuitRp:HUx",
-    "credentialStatus": "ACTIVE"
+    "credentialStatus": "ACTIVE",
+    "credentialSource": "LOCAL",
+    "credentialTarget": "LOCAL"
   }
 }
 ```
@@ -8252,26 +8054,12 @@ The list of expected status codes:
 ```
 <!-- end -->
 
-<!-- begin api DELETE /credential -->
+<!-- begin api POST /credential/delete -->
 ### Delete a Credential
 
 Delete a credential.
 
-This method has a `POST /credential/delete` alternative.
-
 <!-- begin remove -->
-<table>
-    <tr>
-        <td>Method</td>
-        <td><code>DELETE</code></td>
-    </tr>
-    <tr>
-        <td>Resource URI</td>
-        <td><code>/credential</code></td>
-    </tr>
-</table>
-
-Alternative with `POST` method for environments which do not allow `DELETE` methods:
 <table>
     <tr>
         <td>Method</td>
@@ -8793,26 +8581,12 @@ The list of expected status codes:
 ```
 <!-- end -->
 
-<!-- begin api DELETE /otp -->
+<!-- begin api POST /otp/delete -->
 ### Delete an OTP.
 
 Delete an OTP.
 
-This method has a `POST /otp/delete` alternative.
-
 <!-- begin remove -->
-<table>
-    <tr>
-        <td>Method</td>
-        <td><code>DELETE</code></td>
-    </tr>
-    <tr>
-        <td>Resource URI</td>
-        <td><code>/otp</code></td>
-    </tr>
-</table>
-
-Alternative with `POST` method for environments which do not allow `DELETE` methods:
 <table>
     <tr>
         <td>Method</td>
@@ -9075,7 +8849,6 @@ The list of expected status codes:
 ```json
 {
   "requestObject": {
-    "credentialName": "RETAIL_CREDENTIAL",
     "userId": "test1234",
     "credentialValue": ")wOI6ijUkwYI",
     "authenticationMode": "MATCH_EXACT",

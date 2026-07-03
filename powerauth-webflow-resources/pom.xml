@@ -24,33 +24,20 @@
 
     <parent>
         <artifactId>powerauth-webflow-parent</artifactId>
-        <groupId>io.getlime.security</groupId>
-        <version>1.4.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
+        <groupId>com.wultra.security</groupId>
+        <version>2.1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>io.getlime.security</groupId>
     <artifactId>powerauth-webflow-resources</artifactId>
     <name>powerauth-webflow-resources</name>
-    <version>1.4.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <description>PowerAuth WebFlow Resources</description>
+
+    <properties>
+        <skipPublishing>true</skipPublishing>
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.tomcat.embed</groupId>
-                    <artifactId>tomcat-embed-el</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-tomcat</artifactId>
-            <scope>provided</scope>
-        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
@@ -60,26 +47,22 @@
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.security.oauth.boot</groupId>
-            <artifactId>spring-security-oauth2-autoconfigure</artifactId>
-            <version>2.6.8</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>bcpkix-jdk15on</artifactId>
-                    <groupId>org.bouncycastle</groupId>
-                </exclusion>
-            </exclusions>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-oauth2-core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
         </dependency>
 
-        <!-- PowerAuth 2.0 Web Flow Dependencies -->
+        <!-- PowerAuth Web Flow Dependencies -->
         <dependency>
-            <groupId>io.getlime.security</groupId>
+            <groupId>com.wultra.security</groupId>
             <artifactId>powerauth-data-adapter-client</artifactId>
-            <version>1.4.0-SNAPSHOT</version>
         </dependency>
 
         <!-- TEST -->
@@ -89,17 +72,5 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-
+    
 </project>

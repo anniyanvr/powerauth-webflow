@@ -27,6 +27,8 @@ powerauth.nextstep.service.url=http://localhost:8080/powerauth-nextstep
 
 # PowerAuth Server URL
 powerauth.service.url=http://localhost:8080/powerauth-java-server/rest
+powerauth.service.restClientConfig.responseTimeout=60s
+powerauth.service.restClientConfig.maxIdleTime=200s
 powerauth.service.security.clientToken=
 powerauth.service.security.clientSecret=
 # Whether invalid SSL certificates should be accepted
@@ -34,36 +36,27 @@ powerauth.service.ssl.acceptInvalidSslCertificate=false
 
 # PowerAuth Push Server URL
 powerauth.push.service.url=http://localhost:8080/powerauth-push-server
+powerauth.push.service.restClientConfig.responseTimeout=60s
+powerauth.push.service.restClientConfig.maxIdleTime=200s
 
 # Dynamic CSS stylesheet URL
 powerauth.webflow.page.title=PowerAuth Web Flow
 powerauth.webflow.page.ext-resources.location=classpath:/static/resources/
+powerauth.webflow.page.ext-resources.cache-duration=1h
 powerauth.webflow.page.custom-css.url=
 
-# Database Configuration - MySQL
-spring.datasource.url=jdbc:mysql://localhost:3306/powerauth
+# Database Configuration - PostgreSQL
+spring.datasource.url=jdbc:postgresql://localhost:5432/powerauth
 spring.datasource.username=powerauth
 spring.datasource.password=
-spring.datasource.driver-class-name=com.mysql.jdbc.Driver
+spring.datasource.hikari.auto-commit=false
 spring.jpa.properties.hibernate.connection.characterEncoding=utf8
 spring.jpa.properties.hibernate.connection.useUnicode=true
-
-# Database Configuration - PostgreSQL
-#spring.datasource.url=jdbc:postgresql://localhost:5432/powerauth
-#spring.datasource.username=powerauth
-#spring.datasource.password=powerauth
-#spring.datasource.driver-class-name=org.postgresql.Driver
-#spring.jpa.properties.hibernate.temp.use_jdbc_metadata_defaults=false
-#spring.jpa.properties.hibernate.connection.characterEncoding=utf8
-#spring.jpa.properties.hibernate.connection.useUnicode=true
 
 # Database Configuration - Oracle
 #spring.datasource.url=jdbc:oracle:thin:@//localhost:1521/powerauth
 #spring.datasource.username=powerauth
 #spring.datasource.password=
-#spring.datasource.driver-class-name=oracle.jdbc.OracleDriver
-# The following property speeds up Spring Boot startup
-#spring.jpa.properties.hibernate.temp.use_jdbc_metadata_defaults=false
 
 # Application Service Configuration
 powerauth.webflow.service.applicationName=powerauth-webflow
@@ -97,6 +90,18 @@ powerauth.webflow.timeout.warning.delayMs=60000
 powerauth.webflow.consent.limit.enabled=false
 powerauth.webflow.consent.limit.characters=750
 
+# Configuration of Operation Approval Signing using Certificates
+powerauth.webflow.approval.certificate.enabled=false
+powerauth.webflow.approval.certificate.signer=ICA_CLIENT_SIGN
+powerauth.webflow.approval.certificate.signer.ica.configurationUrl=
+powerauth.webflow.approval.certificate.signer.ica.logLevel=1
+powerauth.webflow.approval.certificate.signer.ica.extensionOwner=
+powerauth.webflow.approval.certificate.signer.ica.extensionIDChrome=
+powerauth.webflow.approval.certificate.signer.ica.extensionIDOpera=
+powerauth.webflow.approval.certificate.signer.ica.extensionIDEdge=
+powerauth.webflow.approval.certificate.signer.ica.extensionIDFirefox=
+powerauth.webflow.approval.certificate.signer.ica.extensionInstallURLFirefox=
+
 # Anti-fraud System Configuration
 powerauth.webflow.afs.enabled=false
 powerauth.webflow.afs.type=THREAT_MARK
@@ -114,6 +119,11 @@ powerauth.webflow.input.smsOtp.maxLength=8
 powerauth.webflow.security.cors.enabled=false
 powerauth.webflow.security.cors.allowOrigin=https://localhost.cz
 
+# OAuth 2.1 resource server introspection configuration
+powerauth.webflow.service.oauth2.introspection.uri=http://localhost:8080/powerauth-webflow/oauth2/introspect
+powerauth.webflow.service.oauth2.introspection.clientId=democlient
+powerauth.webflow.service.oauth2.introspection.clientSecret=changeme
+
 # Set JMX default domain in case JMX is enabled, otherwise the application startup fails due to clash in JMX bean names
 spring.jmx.default-domain=powerauth-webflow
 
@@ -124,7 +134,7 @@ spring.jackson.date-format=yyyy-MM-dd'T'HH:mm:ssZ
 spring.jpa.open-in-view=false
 
 # Enable caching of static resources
-spring.resources.cache.cachecontrol.max-age=86400
+spring.web.resources.cache.cachecontrol.max-age=86400
 
 # Disable swagger-ui default petstore url
 springdoc.swagger-ui.disable-swagger-default-url=true
@@ -150,7 +160,7 @@ The random encryption key can be generated using following code:
 ```java
 byte[] randomBytes = new byte[32];
 new SecureRandom().nextBytes(randomBytes);
-String encryptionKey = BaseEncoding.base64().encode(randomBytes);
+String encryptionKey = Base64.getEncoder().encodeToString(randomBytes);
 ```
 
 The symmetric key is used by both Web Flow and by the remote system which needs to decrypt the password for verification.
@@ -168,36 +178,26 @@ Complete configuration file:
 # Allow externalization of properties using application-ext.properties
 spring.profiles.active=ext
 
-# Database Configuration - MySQL
-spring.datasource.url=jdbc:mysql://localhost:3306/powerauth
+# Database Configuration - PostgreSQL
+spring.datasource.url=jdbc:postgresql://localhost:5432/powerauth
 spring.datasource.username=powerauth
 spring.datasource.password=
-spring.datasource.driver-class-name=com.mysql.jdbc.Driver
+spring.datasource.hikari.auto-commit=false
 spring.jpa.properties.hibernate.connection.characterEncoding=utf8
 spring.jpa.properties.hibernate.connection.useUnicode=true
-
-# Database Configuration - PostgreSQL
-#spring.datasource.url=jdbc:postgresql://localhost:5432/powerauth
-#spring.datasource.username=powerauth
-#spring.datasource.password=
-#spring.datasource.driver-class-name=org.postgresql.Driver
-#spring.jpa.properties.hibernate.temp.use_jdbc_metadata_defaults=false
-#spring.jpa.properties.hibernate.connection.characterEncoding=utf8
-#spring.jpa.properties.hibernate.connection.useUnicode=true
 
 # Database Configuration - Oracle
 #spring.datasource.url=jdbc:oracle:thin:@//localhost:1521/powerauth
 #spring.datasource.username=powerauth
 #spring.datasource.password=
-#spring.datasource.driver-class-name=oracle.jdbc.OracleDriver
-# The following property speeds up Spring Boot startup
-#spring.jpa.properties.hibernate.temp.use_jdbc_metadata_defaults=false
 
 # Data Adapter Server Service URL
 powerauth.dataAdapter.service.url=http://localhost:8080/powerauth-data-adapter
 
 # PowerAuth Server URL
 powerauth.service.url=http://localhost:8080/powerauth-java-server/rest
+powerauth.service.restClientConfig.responseTimeout=60s
+powerauth.service.restClientConfig.maxIdleTime=200s
 powerauth.service.security.clientToken=
 powerauth.service.security.clientSecret=
 # Whether invalid SSL certificates should be accepted
@@ -226,9 +226,6 @@ powerauth.nextstep.service.applicationName=powerauth-nextstep
 powerauth.nextstep.service.applicationDisplayName=PowerAuth Next Step Server
 powerauth.nextstep.service.applicationEnvironment=
 
-# Disable new Hibernate ID generators
-spring.jpa.hibernate.use-new-id-generator-mappings=false
-
 # Set JMX default domain in case JMX is enabled, otherwise the application startup fails due to clash in JMX bean names
 spring.jmx.default-domain=powerauth-nextstep
 
@@ -246,7 +243,16 @@ springdoc.default-produces-media-type=application/json
 
 # Set the Spring application name
 spring.application.name=powerauth-nextstep
+
+# OIDC configuration
+powerauth.nextstep.security.auth.type=OIDC
+# URL of the provider, e.g. `https://sts.windows.net/example/`
+spring.security.oauth2.resource-server.jwt.issuer-uri=
+# A comma-separated list of allowed `aud` JWT claim values to be validated.
+spring.security.oauth2.resource-server.jwt.audiences=
 ```
+See the [Spring Security documentation](https://docs.spring.io/spring-security/reference/servlet/oauth2/index.html#oauth2-client-log-users-in) and [OpenID Connect UserInfo endpoint](https://connect2id.com/products/server/docs/api/userinfo) for details.
+
 
 Encryption of user passwords during transport (end-to-end encryption) can be configured using following property:
 ```properties
@@ -263,12 +269,38 @@ The random encryption key can be generated using following code:
 ```java
 byte[] randomBytes = new byte[32];
 new SecureRandom().nextBytes(randomBytes);
-String encryptionKey = BaseEncoding.base64().encode(randomBytes);
+String encryptionKey = Base64.getEncoder().encodeToString(randomBytes);
+```
+
+Properties for connection to LDAP Server and corresponding environment properties. By default, LDAP is disabled and all properties ignored.
+```properties
+powerauth.nextstep.ldap.enabled=${POWERAUTH_NEXTSTEP_LDAP_ENABLED:false}
+powerauth.nextstep.ldap.url=${POWERAUTH_NEXTSTEP_LDAP_URL:}
+powerauth.nextstep.ldap.base=${POWERAUTH_NEXTSTEP_LDAP_BASE:}
+powerauth.nextstep.ldap.managerDn=${POWERAUTH_NEXTSTEP_LDAP_MANAGERDN:}
+powerauth.nextstep.ldap.managerPassword=${POWERAUTH_NEXTSTEP_LDAP_MANAGERPASSWORD:}
+powerauth.nextstep.ldap.anonymousReadOnly=${POWERAUTH_NEXTSTEP_LDAP_ANONYMOUSREADONLY:false}
+powerauth.nextstep.ldap.userSearchBase=${POWERAUTH_NEXTSTEP_LDAP_USERSEARCHBASE:ou=People}
+powerauth.nextstep.ldap.userSearchFilter=${POWERAUTH_NEXTSTEP_LDAP_USERSEARCHFILTER:(uid={0})}
+powerauth.nextstep.ldap.connectTimeout=${POWERAUTH_NEXTSTEP_LDAP_CONNECTTIMEOUT:5000}
+powerauth.nextstep.ldap.readTimeout=${POWERAUTH_NEXTSTEP_LDAP_READTIMEOUT:5000}
 ```
 
 <!-- begin box warning -->
 Do not use the same key for end-to-encryption and database record encryption. Store the keys securely, ideally using a vault mechanism._
 <!-- end -->
+
+### Docker Environment Setup
+For docker image configuration, the following environment variables can be used :
+
+| Environment Variable                     | Default value | Description                                                                                  |
+|------------------------------------------|---------------|----------------------------------------------------------------------------------------------|
+| `NEXTSTEP_MASTER_DB_ENCRYPTION_KEY`      |               | [16 random bytes Base64 encoded, for example 'MTIzNDU2Nzg5MDEyMzQ1Ng==']                     |
+| `NEXTSTEP_E2E_ENCRYPTION_KEY`            |               | [32 random bytes Base64 encoded, for example 'SkJNSkp5eTZMRHk5N0RDSGRacEhhZlp0NnpValdOVksK'] |
+| `NEXTSTEP_AUTH_TYPE`                     | NONE          | `OIDC` for OpenID Connect. If OIDC enabled, the properties bellow must be configured.        |
+| `NEXTSTEP_SECURITY_AUTH_OIDC_ISSUER_URI` |               | URL of the provider, e.g. `https://sts.windows.net/example/`                                 |
+| `NEXTSTEP_SECURITY_AUTH_OIDC_AUDIENCES`  |               | A comma-separated list of allowed `aud` JWT claim values to be validated.                    |
+
 
 ## Data Adapter
 At minimum the following configuration properties should be updated based on deployment:
@@ -281,31 +313,18 @@ Complete configuration file:
 # Allow externalization of properties using application-ext.properties
 spring.profiles.active=ext
 
-# Database Configuration - MySQL
-spring.datasource.url=jdbc:mysql://localhost:3306/powerauth
+# Database Configuration - PostgreSQL
+spring.datasource.url=jdbc:postgresql://localhost:5432/powerauth
 spring.datasource.username=powerauth
 spring.datasource.password=
-spring.datasource.driver-class-name=com.mysql.jdbc.Driver
+spring.datasource.hikari.auto-commit=false
 spring.jpa.properties.hibernate.connection.characterEncoding=utf8
 spring.jpa.properties.hibernate.connection.useUnicode=true
-#spring.jpa.properties.hibernate.connection.CharSet=utf8mb4
-
-# Database Configuration - PostgreSQL
-#spring.datasource.url=jdbc:postgresql://localhost:5432/postgres
-#spring.datasource.username=powerauth
-#spring.datasource.password=
-#spring.datasource.driver-class-name=org.postgresql.Driver
-#spring.jpa.properties.hibernate.temp.use_jdbc_metadata_defaults=false
-#spring.jpa.properties.hibernate.connection.characterEncoding=utf8
-#spring.jpa.properties.hibernate.connection.useUnicode=true
 
 # Database Configuration - Oracle
 #spring.datasource.url=jdbc:oracle:thin:@//localhost:1521/powerauth
 #spring.datasource.username=powerauth
 #spring.datasource.password=
-#spring.datasource.driver-class-name=oracle.jdbc.OracleDriver
-# The following property speeds up Spring Boot startup
-#spring.jpa.properties.hibernate.temp.use_jdbc_metadata_defaults=false
 
 # SMS OTP expiration time in seconds
 powerauth.authorization.sms-otp.expiration-time-in-seconds=300
@@ -330,20 +349,21 @@ springdoc.swagger-ui.disable-swagger-default-url=true
 ## Web Flow Client
 At minimum the following configuration properties should be updated based on deployment:
 - `powerauth.webflow.service.url` - Web Flow service URL
-- `powerauth.webflow.service.oauth.authorizeUrl` - OAuth 2.0 authorize endpoint
-- `powerauth.webflow.service.oauth.tokenUrl` - OAuth 2.0 token endpoint
-- `powerauth.webflow.service.oauth.clientId` - OAuth 2.0 client ID
-- `powerauth.webflow.service.oauth.clientSecret` OAuth 2.0 client secret
+- `powerauth.webflow.service.oauth2.client.*` - OAuth 2.1 client configuration
 - `powerauth.nextstep.service.url` - Next Step service URL
 
 Complete configuration file:
 ```properties
-# Web Flow Base URL Configuration
-powerauth.webflow.service.url=http://localhost:8080/powerauth-webflow
-powerauth.webflow.service.oauth.authorizeUrl=http://localhost:8080/powerauth-webflow/oauth/authorize
-powerauth.webflow.service.oauth.tokenUrl=http://localhost:8080/powerauth-webflow/oauth/token
-powerauth.webflow.service.oauth.clientId=democlient
-powerauth.webflow.service.oauth.clientSecret=changeme
+# OAuth 2.1 client configuration
+powerauth.webflow.service.oauth2.client.registrationId=democlient
+powerauth.webflow.service.oauth2.client.id=democlient
+powerauth.webflow.service.oauth2.client.secret=changeme
+powerauth.webflow.service.oauth2.client.name=democlient
+powerauth.webflow.service.oauth2.client.authorizationUri=http://localhost:8080/powerauth-webflow/oauth2/authorize
+powerauth.webflow.service.oauth2.client.tokenUri=http://localhost:8080/powerauth-webflow/oauth2/token
+powerauth.webflow.service.oauth2.client.userInfoUri=http://localhost:8080/powerauth-webflow/api/secure/profile/me/info
+powerauth.webflow.service.oauth2.client.redirectUri=http://localhost:8080/powerauth-webflow-client/connect/demo
+powerauth.webflow.service.oauth2.client.userNameAttributeName=id
 
 # Next Step Server Service URL
 powerauth.nextstep.service.url=http://localhost:8080/powerauth-nextstep
@@ -365,31 +385,33 @@ spring.jackson.date-format=yyyy-MM-dd'T'HH:mm:ssZ
 # Disable open session in view to avoid startup warning of Spring boot
 spring.jpa.open-in-view=false
 
-# Enable hidden method filter for DELETE method
-spring.mvc.hiddenmethod.filter.enabled=true
-
-# Disable harmless warning from Hikari Data Source during startup during H2 database driver initialization
-logging.level.com.zaxxer.hikari.util.DriverDataSource=ERROR
-
 # Enable caching of static resources
-spring.resources.cache.cachecontrol.max-age=86400
+spring.web.resources.cache.cachecontrol.max-age=86400
 ```
 
-## OAuth 2.0 Client Configuration
+## OAuth 2.1 Client Configuration
 
-The OAuth 2.0 client requires following configuration:
-- `client_id` - an identifier of the OAuth 2.0 client, choose the name so that it describes the client purpose
-- `client_secret` - secret used for authentication of the OAuth 2.0 client, use BCrypt to encrypt the secret
-- `scope` - OAuth 2.0 scopes supported by this client
-- `authorized_grant_types` - OAuth 2.0 grant types, use `authorization_code` for typical deployment
-- `web_server_redirect_url` - comma separated list of all redirect URLs after completion of OAuth 2.0 protocol
-- `additional_information` - additional information for this client, use `{}` for no additional information
-- `autoapprove` - use `true` value because consent page is displayed by Web Flow separately and is not handled by Spring OAuth 2.0 support
+Sample OAuth 2.1 client configuration:
 
 ```sql
-INSERT INTO oauth_client_details (client_id, client_secret, scope, authorized_grant_types, web_server_redirect_uri, additional_information, autoapprove)
-VALUES ('democlient', '$2a$12$MkYsT5igDXSDgRwyDVz1B.93h8F81E4GZJd/spy/1vhjM4CJgeed.', 'profile,aisp,pisp', 'authorization_code', 'http://localhost:8080/powerauth-webflow-client/connect/demo', '{}', 'true');
+INSERT INTO oauth2_registered_client (id, client_id, client_id_issued_at, client_secret, client_secret_expires_at, client_name, client_authentication_methods, authorization_grant_types, redirect_uris, post_logout_redirect_uris, scopes, client_settings, token_settings) VALUES ('8cb2cedf-0152-47c4-b25e-0ee81b1acd44', 'democlient', '2023-04-28 11:44:29.000000', '$2a$12$MkYsT5igDXSDgRwyDVz1B.93h8F81E4GZJd/spy/1vhjM4CJgeed.', null, 'democlient', 'client_secret_basic', 'authorization_code,refresh_token', 'http://localhost:8080/powerauth-webflow-client/connect/demo', null, 'profile,aisp,pisp', '{"@class":"java.util.Collections$UnmodifiableMap","settings.client.require-proof-key":false,"settings.client.require-authorization-consent":false}', '{"@class":"java.util.Collections$UnmodifiableMap","settings.token.reuse-refresh-tokens":true,"settings.token.id-token-signature-algorithm":["org.springframework.security.oauth2.jose.jws.SignatureAlgorithm","RS256"],"settings.token.access-token-time-to-live":["java.time.Duration",300],"settings.token.access-token-format":{"@class":"org.springframework.security.oauth2.server.authorization.settings.OAuth2TokenFormat","value":"reference"},"settings.token.refresh-token-time-to-live":["java.time.Duration",1296000],"settings.token.authorization-code-time-to-live":["java.time.Duration",300]}}');
 ```
+
+See Spring OAuth 2.1 client registration documentation for more details: https://docs.spring.io/spring-security/reference/servlet/oauth2/client/core.html#oauth2Client-client-registration
+
+The following parameters should be configured:
+- `id` - database row unique identifier
+- `client_id` - identifier of the client
+- `client_id_issued_at` - timestamp of client issuance
+- `client_secret` - client password hashed using bcrypt
+- `client_name` - name of the client
+- `redirect_uris` - registered redirect URIs for redirect to original application
+- `scope` - supported OAuth 2.1 scopes
+- `settings.token.access-token-time-to-live` - access token time to live
+- `settings.token.refresh-token-time-to-live` - refresh token time to live
+- `settings.token.authorization-code-time-to-live` - authorization code time to live
+
+The remaining parameters should not be changed, because they correspond to the Spring Authorization Server integration.
 
 Note: bcrypt('changeme', 12) => '$2a$12$MkYsT5igDXSDgRwyDVz1B.93h8F81E4GZJd/spy/1vhjM4CJgeed.'
 

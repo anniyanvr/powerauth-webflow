@@ -21,18 +21,15 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <name>powerauth-webflow-client</name>
     <artifactId>powerauth-webflow-client</artifactId>
-    <groupId>io.getlime.security</groupId>
-    <description>PowerAuth 2.0 Web Flow testing client for OAuth 2.0 dance.</description>
-    <version>1.4.0-SNAPSHOT</version>
+    <name>powerauth-webflow-client</name>
+    <description>PowerAuth Web Flow testing client for OAuth 2.1 dance.</description>
     <packaging>war</packaging>
 
     <parent>
         <artifactId>powerauth-webflow-parent</artifactId>
-        <groupId>io.getlime.security</groupId>
-        <version>1.4.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
+        <groupId>com.wultra.security</groupId>
+        <version>2.1.0-SNAPSHOT</version>
     </parent>
 
     <dependencies>
@@ -41,12 +38,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>log4j-to-slf4j</artifactId>
-                    <groupId>org.apache.logging.log4j</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -54,67 +45,73 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-tomcat</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-oauth2-client</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
-        <!-- Spring Social -->
         <dependency>
-            <groupId>org.springframework.social</groupId>
-            <artifactId>spring-social-core</artifactId>
-            <version>1.1.6.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.social</groupId>
-            <artifactId>spring-social-web</artifactId>
-            <version>1.1.6.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.social</groupId>
-            <artifactId>spring-social-config</artifactId>
-            <version>1.1.6.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.social</groupId>
-            <artifactId>spring-social-security</artifactId>
-            <version>1.1.6.RELEASE</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
         </dependency>
 
-        <!-- PowerAuth 2.0 Web Flow -->
+        <!-- PowerAuth Web Flow -->
         <dependency>
-            <groupId>io.getlime.security</groupId>
+            <groupId>com.wultra.security</groupId>
             <artifactId>powerauth-nextstep-client</artifactId>
-            <version>1.4.0-SNAPSHOT</version>
         </dependency>
 
-        <!-- H2 DB -->
+        <!-- API -->
         <dependency>
-            <groupId>org.hsqldb</groupId>
-            <artifactId>hsqldb</artifactId>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Logging -->
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+        </dependency>
+
+        <!-- Monitoring -->
+        <dependency>
+            <groupId>io.projectreactor</groupId>
+            <artifactId>reactor-core-micrometer</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-tracing-bridge-otel</artifactId>
+        </dependency>
+
+        <!-- For run at Apple M1 architecture -->
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-resolver-dns-native-macos</artifactId>
             <scope>runtime</scope>
+            <classifier>osx-aarch_64</classifier>
         </dependency>
 
         <!-- Other Dependencies -->
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>${jackson.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
         </dependency>
 
         <!-- Tests -->
@@ -138,20 +135,35 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
                 <configuration>
-                    <skip>true</skip>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                        <exclude>
+                            <groupId>jakarta.servlet</groupId>
+                            <artifactId>jakarta.servlet-api</artifactId>
+                        </exclude>
+                    </excludes>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>${maven-war-plugin.version}</version>
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>test-repository</id>
+            <activation>
+                <property>
+                    <name>!useInternalRepo</name>
+                </property>
+            </activation>
+            <properties>
+                <skipPublishing>true</skipPublishing>
+                <maven.deploy.skip>true</maven.deploy.skip>
+            </properties>
+        </profile>
+    </profiles>
 
 </project>

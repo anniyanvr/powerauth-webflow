@@ -17,7 +17,6 @@
 // require
 const React = require('react');
 const ReactDOM = require('react-dom');
-const axiosDefaults = require('axios/lib/defaults');
 
 // Support for browsers which do not have built-in Intl support such as IE 9 and IE 10
 import 'intl';
@@ -26,6 +25,7 @@ import {Provider} from "react-redux";
 import {IntlProvider} from "react-intl-redux";
 
 import store from "./store";
+import axios from "axios";
 
 import App from "./components/app";
 
@@ -33,20 +33,67 @@ import {addLocaleData} from "react-intl";
 
 import enLocaleData from "react-intl/locale-data/en";
 import csLocaleData from "react-intl/locale-data/cs";
+import ukLocaleData from "react-intl/locale-data/uk";
+import roLocaleData from "react-intl/locale-data/ro";
+import deLocaleData from "react-intl/locale-data/de";
+import frLocaleData from "react-intl/locale-data/fr";
+import esLocaleData from "react-intl/locale-data/es";
 
-// currently only EN and CS languages are supported
+
+// currently specific languages are supported
 addLocaleData([
     ...enLocaleData,
     ...csLocaleData,
-]);
+    ...ukLocaleData,
+    ...roLocaleData,
+    ...deLocaleData,
+    ...frLocaleData,
+    ...esLocaleData
 
-// default locale is set according to JS variable lang, which is set by backend
+]);
+const languagesMapping = [
+                           {"code":"en", "country" :  "US"},
+                           {"code":"cs", "country" :  "CZ"},
+                           {"code":"ro", "country" :  "RO"},
+                           {"code":"uk", "country" :  "UA"},
+                           {"code":"de", "country" :  "DE"},
+                           {"code":"fr", "country" :  "FR"},
+                           {"code":"es", "country" :  "ES"}
+
+                         ];
+
+//  check if language is supported
+const { languageList  } = languageSetting;
+
+// default locale is set according to JS variable lang, which is set by backend as locle from the browser
+
+// if locale is not set to supported language return first supported locale
+
+// check if mapping to country exists
+// get mapped locale to country
+const mappedLang = languagesMapping.find (item => item.code === lang)
+
+//if mapping isn't exists or mapped country is not in the list
+if (!mappedLang || !languageList.includes(lang)) {
+    // pick first country from the list
+
+    //map it to locale
+    lang = languagesMapping.find(item => { return item.country == languageList.at(0); }).code
+
+    // cookie is set, so that the backend is aware of the locale change on next request
+    const d = new Date();
+    // cookie expiration is set to 30 days
+    d.setTime(d.getTime() + (30 * 24 * 60 * 60 * 1000));
+    document.cookie = "lang=" + lang + ";expires=" + d.toUTCString() + ";path=/";
+
+}
+
 store.dispatch({
     type: "CHANGE_LOCALE",
     locale: lang
 });
 
-axiosDefaults.headers.common[csrf.headerName] = csrf.token;
+axios.defaults.headers.common[csrf.headerName] = csrf.token;
 
 // Support: IE 9-11 only, documentMode is an IE-only property
 // https://www.w3schools.com/jsref/prop_doc_documentmode.asp
@@ -54,7 +101,17 @@ var msie = document.documentMode;
 if (msie && msie < 9) {
     if (lang === "cs") {
         window.alert(I18N_CS.messages["browser.unsupported"]);
-    } else {
+    } else if (lang === "uk") {
+        window.alert(I18N_UK.messages["browser.unsupported"]);
+    } else if (lang === "ro") {
+        window.alert(I18N_RO.messages["browser.unsupported"]);
+    } else if (lang === "de") {
+        window.alert(I18N_DE.messages["browser.unsupported"]);
+    } else if (lang === "fr") {
+        window.alert(I18N_FR.messages["browser.unsupported"]);
+    } else if (lang === "es") {
+        window.alert(I18N_ES.messages["browser.unsupported"]);
+    }  else {
         window.alert(I18N_EN.messages["browser.unsupported"]);
     }
 }

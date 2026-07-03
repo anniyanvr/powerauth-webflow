@@ -22,26 +22,28 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>powerauth-mtoken-model</artifactId>
-    <groupId>io.getlime.security</groupId>
-    <version>1.4.0-SNAPSHOT</version>
+    <name>powerauth-mtoken-model</name>
+    <description>PowerAuth MToken Model</description>
 
     <parent>
         <artifactId>powerauth-webflow-parent</artifactId>
-        <groupId>io.getlime.security</groupId>
-        <version>1.4.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
+        <groupId>com.wultra.security</groupId>
+        <version>2.1.0-SNAPSHOT</version>
     </parent>
 
     <dependencies>
         <dependency>
-            <groupId>io.getlime.core</groupId>
+            <groupId>com.wultra.core</groupId>
             <artifactId>rest-model-base</artifactId>
-            <version>${wultra-java-core.version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
-            <version>${jackson.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-annotations-jakarta</artifactId>
         </dependency>
     </dependencies>
 

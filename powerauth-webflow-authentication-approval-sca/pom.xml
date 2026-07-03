@@ -24,53 +24,28 @@
 
     <parent>
         <artifactId>powerauth-webflow-parent</artifactId>
-        <groupId>io.getlime.security</groupId>
-        <version>1.4.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
+        <groupId>com.wultra.security</groupId>
+        <version>2.1.0-SNAPSHOT</version>
     </parent>
 
-    <name>powerauth-webflow-authentication-approval-sca</name>
     <artifactId>powerauth-webflow-authentication-approval-sca</artifactId>
-    <groupId>io.getlime.security</groupId>
-    <version>1.4.0-SNAPSHOT</version>
+    <name>powerauth-webflow-authentication-approval-sca</name>
+    <description>PowerAuth WebFlow Authentication Approval SCA</description>
+
+    <properties>
+        <skipPublishing>true</skipPublishing>
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
 
     <dependencies>
         <dependency>
-            <groupId>io.getlime.security</groupId>
+            <groupId>com.wultra.security</groupId>
             <artifactId>powerauth-webflow-authentication</artifactId>
-            <version>1.4.0-SNAPSHOT</version>
-            <exclusions>
-                <!-- TODO (racansky, 2022-11-30) temporal until lib build -->
-                <exclusion>
-                    <groupId>org.apache.tomcat.embed</groupId>
-                    <artifactId>tomcat-embed-core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.tomcat.embed</groupId>
-                    <artifactId>tomcat-embed-el</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.tomcat.embed</groupId>
-                    <artifactId>tomcat-embed-websocket</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>

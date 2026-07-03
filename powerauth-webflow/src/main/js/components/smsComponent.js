@@ -15,11 +15,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import {Button, FormControl, FormGroup} from "react-bootstrap";
+import {Button, FormControl, FormGroup, InputGroup } from "react-bootstrap";
+import { Eye, EyeSlashFill } from "react-bootstrap-icons";
 import {FormattedMessage} from "react-intl";
 import React from "react";
 import {authenticate, initializeICAClientSign} from "../actions/smsAuthActions";
 import {connect} from "react-redux";
+import CertificateSelect from "./certificateSelect";
 
 /**
  * Embeddable SMS authorization component.
@@ -35,16 +37,20 @@ export default class SmsComponent extends React.Component {
         super();
         this.handleAuthCodeChange = this.handleAuthCodeChange.bind(this);
         this.handlePasswordChange = this.handlePasswordChange.bind(this);
+        this.handleToggle = this.handleToggle.bind(this);
+        this.handleCertificateChoice = this.handleCertificateChoice.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.updateButtonState = this.updateButtonState.bind(this);
-        this.signerInitSucceeded = this.signerInitSucceeded.bind(this);
-        this.signerInitFailed = this.signerInitFailed.bind(this);
-        this.signerInitNotReady = this.signerInitNotReady.bind(this);
-        this.chooseCertificateAndSignMessage = this.chooseCertificateAndSignMessage.bind(this);
-        this.approveWithCertificate = this.approveWithCertificate.bind(this);
-        this.approvalWithCertificateSucceeded = this.approvalWithCertificateSucceeded.bind(this);
-        this.approvalWithCertificateFailed = this.approvalWithCertificateFailed.bind(this);
-        this.state = {authCode: '', password: '', confirmDisabled: true, signerReady: false, signerInitFailed: false, signerError: null, signedMessage: null};
+        this.loadUserKeystore = this.loadUserKeystore.bind(this);
+        this.chooseCertificate = this.chooseCertificate.bind(this);
+        this.signOperationData = this.signOperationData.bind(this);
+        this.onSignerInitSucceeded = this.onSignerInitSucceeded.bind(this);
+        this.onSignerInitFailed = this.onSignerInitFailed.bind(this);
+        this.onSignerNotReady = this.onSignerNotReady.bind(this);
+        this.onCertificatesLoaded = this.onCertificatesLoaded.bind(this);
+        this.onSignerSucceeded = this.onSignerSucceeded.bind(this);
+        this.onSignerFailed = this.onSignerFailed.bind(this);
+        this.state = {authCode: '', password: '', confirmDisabled: true, signerReady: false, signerInitFailed: false, signerError: null, certificates: null, chosenCertificate: null, signedMessage: null, pwdType:'password'};
     }
 
     componentDidMount() {
@@ -62,6 +68,25 @@ export default class SmsComponent extends React.Component {
 
     handlePasswordChange(event) {
         this.setState({password: event.target.value}, this.updateButtonState);
+    }
+
+    handleToggle(event) {
+        if (this.state.pwdType=='password'){
+            this.setState ({pwdType: 'text'});
+        } else {
+            this.setState ({pwdType: 'password'});
+        }
+    }
+
+    handleCertificateChoice(certificate) {
+        this.setState({chosenCertificate: certificate});
+    }
+
+    handleSubmit(event) {
+        event.preventDefault();
+        this.setState({confirmDisabled: true});
+        this.props.dispatch(authenticate(this.state.authCode, this.state.password, this.state.signedMessage, this.props.parentComponent, () =>
+            this.setState({authCode: '', password: ''})));
     }
 
     updateButtonState() {
@@ -91,33 +116,28 @@ export default class SmsComponent extends React.Component {
         }
     }
 
-    signerInitSucceeded() {
-        this.setState({signerReady: true});
-        this.chooseCertificateAndSignMessage();
+    loadUserKeystore() {
+        this.setState({signerError: null, certificates: null, chosenCertificate: null});
+        const onCertificatesLoaded = this.onCertificatesLoaded;
+        const cbSuccess = function(jsonCerts) {
+            const certs = JSON.parse(jsonCerts);
+            onCertificatesLoaded(certs.Certificates);
+        }
+        const cbError = this.onSignerFailed;
+        loadKeyStore(cbSuccess, cbError);
     }
 
-    signerInitNotReady() {
-        this.setState({signerReady: false});
-    }
-
-    chooseCertificateAndSignMessage() {
-        const data = this.props.data;
-        const cbSuccessApproval = this.approvalWithCertificateSucceeded;
-        const cbError = this.approvalWithCertificateFailed;
-        const encodedData = encodeToBase64(data);
-        loadKeyStoreAndSignMessage(encodedData, cbSuccessApproval, cbError);
-    }
-
-    approveWithCertificate() {
+    chooseCertificate(event) {
+        event.preventDefault();
         // Register callbacks which are bound to this to avoid react vs. ICA component context issues
-        const cbSuccess = this.signerInitSucceeded;
-        const cbError = this.signerInitFailed;
-        const cbNotReady = this.signerInitNotReady;
-        const chooseCertificateAndSignMessage = this.chooseCertificateAndSignMessage;
+        const cbSuccess = this.onSignerInitSucceeded;
+        const cbError = this.onSignerInitFailed;
+        const cbNotReady = this.onSignerNotReady;
+        const loadUserKeystore = this.loadUserKeystore;
 
         // Skip initialization in case it was already done
         if (this.state.signerReady) {
-            chooseCertificateAndSignMessage();
+            loadUserKeystore();
             return;
         }
 
@@ -135,25 +155,66 @@ export default class SmsComponent extends React.Component {
         }
     }
 
-    approvalWithCertificateSucceeded(signedMessage) {
-        this.setState({signedMessage: signedMessage, signerError: null});
-    }
-
-    signerInitFailed(errorMessage) {
-        this.setState({signerError: errorMessage, signerInitFailed: true})
-    }
-
-    approvalWithCertificateFailed(errorMessage) {
-        this.setState({signerError: errorMessage, signedMessage: null});
-    }
-
-    handleSubmit(event) {
+    signOperationData(event) {
         event.preventDefault();
-        this.props.dispatch(authenticate(this.state.authCode, this.state.password, this.state.signedMessage, this.props.parentComponent));
-        this.setState({authCode: '', password: ''});
+        const signatureDataBase64 = this.props.signatureDataBase64;
+        const cbSuccess = this.onSignerSucceeded;
+        const cbError = this.onSignerFailed;
+        setChosenCertificate(this.state.chosenCertificate.X509PEM, cbError);
+        signMessage(signatureDataBase64, cbSuccess, cbError);
+    }
+
+    onSignerInitSucceeded() {
+        this.setState({signerReady: true});
+        this.loadUserKeystore();
+    }
+
+    onSignerNotReady() {
+        this.setState({signerReady: false});
+    }
+
+    onCertificatesLoaded(certificates) {
+        if (!certificates) {
+            this.onSignerFailed("signer.error.certificate.notFound");
+            return;
+        }
+        this.setState({certificates: certificates});
+        const handleCertificateChoice = this.handleCertificateChoice;
+        const cbSuccess = function(pem) {
+            let certificateIndex = 0;
+            if (pem) {
+                // Iterate through certificates and found the one which should be preselected
+                for (const [i, value] of certificates.entries()) {
+                    if (value.X509PEM === pem) {
+                        certificateIndex = i;
+                        break;
+                    }
+                }
+            }
+            handleCertificateChoice(certificates[certificateIndex]);
+        }
+        const cbError = function() {
+            // Ignore any errors and just set the first certificate
+            handleCertificateChoice(certificates[0]);
+        }
+        // Try to resolve last used certificate, otherwise set first certificate if there is no certificate preselected
+        getCertificateForPreselect(cbSuccess, cbError);
+    }
+
+    onSignerSucceeded(signedMessage) {
+        this.setState({signedMessage: signedMessage, signerError: null, certificates: null, chosenCertificate: null});
+    }
+
+    onSignerInitFailed(errorMessage) {
+        this.setState({signerError: errorMessage, signerInitFailed: true, certificates: null, chosenCertificate: null})
+    }
+
+    onSignerFailed(errorMessage) {
+        this.setState({signerError: errorMessage, signedMessage: null, certificates: null, chosenCertificate: null});
     }
 
     render() {
+       const formatMessage = this.props.intl.formatMessage;
         return (
             <form onSubmit={this.handleSubmit}>
                 {(this.props.initialized) ? (
@@ -174,7 +235,7 @@ export default class SmsComponent extends React.Component {
                             undefined
                         )}
                         {(this.props.username) ? (
-                            <div>
+                            <div id="smsComponent-loginNumber">
                                 <FormGroup>
                                     <div className="attribute row">
                                         <div className="message-information">
@@ -210,13 +271,12 @@ export default class SmsComponent extends React.Component {
                                     <div>
                                         {(!this.state.signerInitFailed) ? (
                                             <FormGroup>
-                                                <div className="row">
+                                                <div className="attribute row">
                                                     <div className="col-xs-6 client-certificate-label">
                                                         <FormattedMessage id="qualifiedCertificate.approve"/>
                                                     </div>
                                                     <div className="col-xs-6">
-                                                        <a href="#" onClick={this.approveWithCertificate}
-                                                           className="btn btn-lg btn-default">
+                                                        <a href="#" onClick={this.chooseCertificate} className="btn btn-lg btn-default">
                                                             <FormattedMessage id="qualifiedCertificate.choose"/>
                                                         </a>
                                                     </div>
@@ -227,6 +287,32 @@ export default class SmsComponent extends React.Component {
                                         )}
                                     </div>
                                 )}
+                                {(this.state.certificates) ? (
+                                    <div>
+                                        <FormGroup>
+                                            <div className="attribute row">
+                                                <div className="col-xs-12">
+                                                    <CertificateSelect
+                                                        certificates={this.state.certificates}
+                                                        chosenCertificate={this.state.chosenCertificate}
+                                                        choiceDisabled={this.state.certificates.length < 2}
+                                                        callback={this.handleCertificateChoice}
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="attribute row">
+                                                <div className="col-xs-6 pull-right">
+                                                    <a href="#" onClick={this.signOperationData}
+                                                       className="btn btn-lg btn-default">
+                                                        <FormattedMessage id="qualifiedCertificate.sign"/>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </FormGroup>
+                                    </div>
+                                ) : (
+                                    undefined
+                                )}
                                 <hr/>
                             </div>
                         ) : (
@@ -234,7 +320,7 @@ export default class SmsComponent extends React.Component {
                         )}
                         {(this.props.passwordEnabled && !this.state.signedMessage) ? (
                             <div>
-                                <FormGroup>
+                                <FormGroup id="smsComponent-loginSca-password">
                                     <div className="attribute row">
                                         <div className="message-information">
                                             <FormattedMessage id="loginSca.password"/>
@@ -244,9 +330,15 @@ export default class SmsComponent extends React.Component {
                                 <FormGroup>
                                     <div className="attribute row">
                                         <div className="col-xs-12">
-                                            <FormControl id="password" autoComplete="new-password" type="password"
-                                                         value={this.state.password} onChange={this.handlePasswordChange}
-                                                         maxLength={passwordMaxLength}/>
+                                            <InputGroup >
+                                                <FormControl id="password" autoComplete="new-password" type={this.state.pwdType}
+                                                             value={this.state.password} onChange={this.handlePasswordChange}
+                                                             placeholder={formatMessage({id: 'loginSca.password.placeholder',defaultMessage: ' '})}
+                                                             maxLength={passwordMaxLength}/>
+                                                <InputGroup.Addon onClick={this.handleToggle} class={(this.state.pwdType=='password') ? 'input-group-addon password-icon-holder password-icon-holder-close' : 'input-group-addon password-icon-holder password-icon-holder-open'} >
+                                                    {(this.state.pwdType=='password') ?  <EyeSlashFill class="password-icon-close" size="2em"/>  : <Eye class="password-icon-open" size="2em" />  }
+                                                </InputGroup.Addon>
+                                             </InputGroup>
                                         </div>
                                     </div>
                                 </FormGroup>
@@ -256,7 +348,7 @@ export default class SmsComponent extends React.Component {
                         )}
                         {(this.props.smsOtpEnabled) ? (
                             <div>
-                                <FormGroup>
+                                <FormGroup id="smsComponent-smsAuthorization-authCodeText">
                                     <div className="attribute row">
                                         <div className="message-information">
                                             <FormattedMessage id="smsAuthorization.authCodeText"/>
@@ -268,12 +360,20 @@ export default class SmsComponent extends React.Component {
                                         <div className="col-xs-12">
                                             <FormControl id="sms-otp" autoComplete="new-password" type="text"
                                                          value={this.state.authCode} onChange={this.handleAuthCodeChange}
+                                                         placeholder={formatMessage({id: 'smsAuthorization.authCodeText.placeholder', defaultMessage: ' '})}
                                                          maxLength={smsOtpMaxLength}/>
                                         </div>
                                     </div>
                                 </FormGroup>
-                                <FormGroup>
+                                <FormGroup id="smsComponent-smsAuthorization-textLine">
                                     <div className="font-small message-information">
+                                        {(this.props.intl.formatMessage({id: 'smsAuthorization.forgotPassword.url'}) != 'smsAuthorization.forgotPassword.url' )?(
+                                            <div id="smsComponent-smsAuthorization-textLine-forgotPassword">
+                                                <a href={formatMessage({id: 'smsAuthorization.forgotPassword.url'})}>
+                                                        <FormattedMessage id="smsAuthorization.forgotPassword"/>
+                                                </a>
+                                            </div>
+                                        ) : undefined }
                                         {(this.props.resendEnabled) ? (
                                             <div id="resend-active" onClick={this.props.smsResendCallback} className="sms-resend-active">
                                                 <FormattedMessage id="smsAuthorization.resendActive"/>
@@ -290,14 +390,14 @@ export default class SmsComponent extends React.Component {
                              undefined
                          )}
                         <FormGroup>
-
                             <div className="row buttons">
-                                <div className="col-xs-6">
+                                <hr className="hr-row-separator" />
+                                <div className="col-xs-6" id="smsComponent-cancel">
                                     <a href="#" onClick={this.props.cancelCallback} className="btn btn-lg btn-default">
                                         <FormattedMessage id="operation.cancel"/>
                                     </a>
                                 </div>
-                                <div className="col-xs-6">
+                                <div className="col-xs-6" id="smsComponent-confirm">
                                     <Button bsSize="lg" type="submit" bsStyle="success" block disabled={this.state.confirmDisabled}>
                                         {(this.props.username && this.props.passwordEnabled) ? (
                                             <FormattedMessage id="loginSca.confirm"/>

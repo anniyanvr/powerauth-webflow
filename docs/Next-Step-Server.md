@@ -1,16 +1,10 @@
-# NextStep Server
+# Next Step Server
 
-Next Step Server resolves the Next Step of the authentication process, handled authentication using credentials and OTP authorization codes, and manages user identities.
+Next Step Server resolves the Next Step of the authentication process, handles authentication using credentials and OTP authorization codes, and manages user identities.
 
-You can obtain the war file which can be deployed to a Java EE container in [releases](https://github.com/wultra/powerauth-webflow/releases).
+## Next Step Server Functionality
 
-The configuration of Next Step Server is described in [Next Step Configuration](./Web-Flow-Configuration.md#next-step-server).
-
-Next step definitions need to be configured before deploying Next Step Server, see chapter [Configuring Next Step](Configuring-Next-Step.md).
-
-## Next Step Server functionality
-
-Next Step Server implements following functionality:
+Next Step Server provides the following functionality:
 - management of next steps during authentication process
   - step definitions are loaded from database when Next Step Server starts
   - making decision about the next step of an operation given loaded step definitions, operation name, operation type, operation status and step authentication result
@@ -18,7 +12,7 @@ Next Step Server implements following functionality:
   - create an authentication method
   - listing available authentication methods both general and user-specific
   - enabling/disabling authentication methods per user including their configuration (configuration is required for the [Mobile Token](./Mobile-Token-Configuration.md))
-  - get a list of authentication methods currently enabled for the user  
+  - get a list of authentication methods currently enabled for the user
   - delete an authentication method
 - management of operations
   - create a new operation
@@ -34,8 +28,8 @@ Next Step Server implements following functionality:
   - retrieve mobile token configuration
   - get and update detailed authentication method and operation configuration
   - authentication method downgrade for the next step
-  - enable PowerAuth token for the next step   
-  - integration with PowerAuth operations   
+  - enable PowerAuth token for the next step
+  - integration with PowerAuth operations
   - store result of an AFS action
 - management of organizations
   - create an organization
@@ -52,19 +46,25 @@ Next Step Server implements following functionality:
   - obtaining user authentication history
   - update status of multiple user identities
   - lookup of user identities
-- management of Next Step applications  
+- management of Next Step applications
 - management of credential policies
 - management of OTP policies
 - management of credential definitions
 - management of OTP definitions
 - configuration of hashing algorithm parameters
 - secure storage of user credentials
-- secure storage of OTP authorization codes, their delivery via Data Adapter and OTP state management
+- secure storage of OTP authorization codes, their delivery via [Data Adapter](./Data-Adapter.md) and OTP state management
 - storage of failed attempt counters, their update and reset
 - configuration of next step definitions
 - definition of user roles
 - authentication using credentials, OTP authorization codes and combine credential and OTP authentication
 
-REST services are available for all Next Step functionality listed above.
+REST services are available for all functionality listed above.
 
-The Next Step Server functionality is described in details in [Next Step Server REST API Reference](./Next-Step-Server-REST-API-Reference.md).
+The Next Step Server functionality is described in detail in [Next Step Server REST API Reference](./Next-Step-Server-REST-API-Reference.md).
+
+## Read Next
+
+- [Next Step Server Architecture](./Next-Step-Server-Architecture.md)
+- [System Requirements](./Next-Step-Server-System-Requirements.md)
+- [Installation](./Next-Step-Server-Installation.md)

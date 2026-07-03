@@ -20,34 +20,38 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <name>powerauth-webflow-i18n</name>
     <artifactId>powerauth-webflow-i18n</artifactId>
-    <groupId>io.getlime.security</groupId>
-    <description>PowerAuth 2.0 Next Step Server</description>
-    <version>1.4.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <name>powerauth-webflow-i18n</name>
+    <description>PowerAuth Next Step Server</description>
 
     <parent>
-        <groupId>io.getlime.security</groupId>
+        <groupId>com.wultra.security</groupId>
         <artifactId>powerauth-webflow-parent</artifactId>
-        <version>1.4.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
+        <version>2.1.0-SNAPSHOT</version>
     </parent>
+
+    <properties>
+        <skipPublishing>true</skipPublishing>
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
 
     <dependencies>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <version>${spring-context.version}</version>
         </dependency>
         <dependency>
-            <groupId>javax.annotation</groupId>
-            <artifactId>javax.annotation-api</artifactId>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
@@ -60,26 +64,14 @@
             <dependencies>
                 <!-- JDK 9 dependencies -->
                 <dependency>
-                    <groupId>javax.annotation</groupId>
-                    <artifactId>javax.annotation-api</artifactId>
-                    <version>${javax.annotation.version}</version>
+                    <groupId>jakarta.annotation</groupId>
+                    <artifactId>jakarta.annotation-api</artifactId>
+                    <version>${jakarta-annotation.version}</version>
                     <!-- Library should be provided by runtime, otherwise there would be conflicts with jar bundled in war. -->
                     <scope>provided</scope>
                 </dependency>
             </dependencies>
         </profile>
     </profiles>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>
